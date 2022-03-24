@@ -1,0 +1,62 @@
+version: "3"
+volumes:
+  influxdb_data1:
+  influxdb_data2:
+services:
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    environment:
+      - HOSTNAME=
+      - GRAFANA_PUBLIC_URL=https://grafana.domain.com
+      - GRAFANA_SMTP_ENABLED=true
+      - GRAFANA_SMTP_ADDRESS=mail.domain.local:587
+      - GRAFANA_SMTP_USER=
+      - GRAFANA_SMTP_PASSWORD=
+      - GRAFANA_SMTP_SKIP_VERIFY=false
+      - GRAFANA_SMTP_FROM_ADDRESS=
+      - GRAFANA_SMTP_FROM_NAME=Grafana
+      - GRAFANA_EMAIL_ON_SIGN_UP=true
+    volumes:
+      - /appdata/grafana/etc-grafana:/etc/grafana
+      - /appdata/grafana/var-lib-grafana:/var/lib/grafana
+    restart: always
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb_data1:/etc/influxdb2
+      - influxdb_data2:/var/lib/influxdb2
+      - /appdata/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
+    restart: always
+  telegraf:
+    image: telegraf:latest
+    ports:
+      - 8125:8125
+      - 8092:8092/udp
+      - 8094:8094
+    user: telegraf:998
+    environment:
+      - HOST_PROC=/rootfs/proc
+      - HOST_SYS=/rootfs/sys
+      - HOST_ETC=/rootfs/etc
+      - HOST_MOUNT_PREFIX=/rootfs
+      - TELEGRAF_GET_INTERVAL=10s
+      - TELEGRAF_SEND_INTERVAL=10s
+      - TELEGRAF_HOSTNAME=
+      - TELEGRAF_IDB_URL=influxdb:8086
+      - TELEGRAF_IDB_TOKEN=
+      - TELEGRAF_IDB_ORGANIZATION=
+      - TELEGRAF_IDB_BUCKET=
+    volumes:
+      - /appdata/telegraf/:/etc/telegraf/
+      - /var/run/utmp:/var/run/utmp:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /sys:/rootfs/sys:ro
+      - /etc:/rootfs/etc:ro
+      - /proc:/rootfs/proc:ro
+      - /run/udev:/run/udev:ro
+    restart: always
