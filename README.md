@@ -21,10 +21,10 @@ Because we will expose also InfluxDB on internet we can also send data from serv
 ## 2. Installation
 
 **2.1 Clone repository:**
-`git clone https://github.com/KomelT/boilerplates.git`
+`git clone https://github.com/KomelT/Grafana-Telegraf-and-InfluxDB-2.x.x.git`
 
 **2.2 Change directory:**
-`cd boilerplates/docker/grafana-monitoring`
+`cd Grafana-Telegraf-and-InfluxDB-2.x.x`
 
 **2.3 Edit Nginx data:**
 At the end services Grafana and InfluxDB will be exposed to internet.
