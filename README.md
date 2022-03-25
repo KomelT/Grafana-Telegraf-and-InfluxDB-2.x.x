@@ -114,16 +114,27 @@ Now you can create SSL for your exposed domains. (Certbot)
 Now reach your eposed domain of InfluxDB and you should be presented with welcome screen.
 Click 'Get started'.
 ![Alt text](/images/influx1.png)
+
 Fill up all the data and don't forget it.
+
 ![Alt text](/images/influx2.png)
+
 On left side click on 'Data' section.
+
 ![Alt text](/images/influx3.png)
+
 Then click on 'Telegraf'.
+
 ![Alt text](/images/influx4.png)
+
 Create Configuration.
+
 ![Alt text](/images/influx5.png)
+
 Choose System and Docker.
+
 ![Alt text](/images/influx6.png)
+
 Then choose again Docker and paste this `/var/run/docker.sock` as socket.
 After this at the end you should be presented with token. Save it.
 
