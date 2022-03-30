@@ -60,7 +60,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-cp configuration/nginx/nginx.conf /etc/nginx/sites-available/grafana-monitoring && echo "Nginx config copied successfully!"
+cp nginx.conf /etc/nginx/sites-available/grafana-monitoring && echo "Nginx config copied successfully!"
 
 if [ $? -ne 0 ]; then
     echo "Exitting because of error!"

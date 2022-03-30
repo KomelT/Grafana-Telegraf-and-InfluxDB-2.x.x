@@ -1,42 +1,81 @@
 # Grafana, Telegraf and InfluxDB 2.xx System monitoring
 
-## 1. Description and Logic
+1. [Description, Logic and Use cases](#desc)
+   [1.2 Why was this created?](#why)
+   [1.3 Brief set up process](#brief)
+   [1.4 Logic behind](#logic)
+   [1.5 Use cases](#cases)
+   [1.5.1 Expose Grafana and InfluxDB on Internet](#e-all)
+   [1.5.2 Expose only Grafana on Internet](#only-grafana)
+2. [Installation](#install)
+   [2.1 Clone repository](#clone)
+   [2.2 Change directory](#dir)
+   [2.3 Edit Nginx data](#nginx)
+   [2.4 Edit docker data](#docker)
+   [2.5 Run script?](#script)
+   [2.6 Set up InfluxDB](#influx)
+   [2.7 Set up Telegraf](#telegraf)
+   [2.8 Set up Grafana](#grafana)
 
-**Why was this created?**
-This stack was created in wish to faster deploy Grafana, Telegraf and InfluxDB on a system and expose it on the internet.
+## 1. Description, Logic and Use cases <a id="desc"></a>
 
-**Brief set up process:**
+### 1.2 Why was this created? <a id="why"></a>
 
-1. Edit and fill up necessary variables,
-2. Run script, which does some work for you,
-3. Create InfluxDB creditentials,
-4. Edit docker-compose.yaml file with InfluxDB creditentials,
-5. Start making dashboard in Grafana!
+This stack was created in wish to faster deploy Grafana, Telegraf and InfluxDB on a system and expose it on the internet. Then having ability to connect it with Telegraf from another system on web and capture metrics from two separate machines.
 
-**Logic behind:**
-Telegraf gets system data (docker, net...) and sends it to InfluxDB.
+### 1.3 Brief set up process: <a id="brief"></a>
+
+1. Edit and fill up necessary `docker-compose.yaml` and `nginx.conf` variables,
+2. Run `deploy.sh` script, which does some work for you,
+3. Create InfluxDB creditentials, (optional)
+4. Edit docker-compose.yaml file with InfluxDB creditentials, (optional)
+5. Create dashboard in Grafana!
+
+### 1.4 Logic behind: <a id="logic"></a>
+
+Telegraf gets system metrics (docker, net...) and sends it to InfluxDB.
 Grafana fetchs data from InfluxDB and displays it.
-Because we will expose also InfluxDB on internet we can also send data from servers outside our network.
+If we want to expose also InfluxDB on internet we can also send metrics from servers outside our network.
 
-## 2. Installation
+### 1.5 Use cases: <a id="cases"></a>
 
-**2.1 Clone repository:**
+**1.5.1 Expose Grafana and InfluxDB on Internet:** <a id="e-all"></a>
+For this usecase just follow installation.
+
+**1.5.2 Expose only Grafana on Internet:** <a id="only-grafana"></a>
+If you don't want to expose InfluxDB on internet and just use it localy follow this:
+
+1. Remove InfluxDB part from `nginx.conf`
+
+```
+...
+server {
+  listen 80;
+  server_name influxdb.domain.local;
+
+  location / {
+    proxy_pass http://localhost:8086/;
+  }
+}
+...
+```
+
+## 2. Installation <a id="install"></a>
+
+**2.1 Clone repository:** <a id="clone"></a>
 `git clone https://github.com/KomelT/Grafana-Telegraf-and-InfluxDB-2.x.x.git`
 
-**2.2 Change directory:**
+**2.2 Change directory:** <a id="dir"></a>
 `cd Grafana-Telegraf-and-InfluxDB-2.x.x`
 
-**2.3 Edit Nginx data:**
-At the end services Grafana and InfluxDB will be exposed to internet.
-
-Duplicate file:
-`cp configuration/nginx/nginx.sample.conf configuration/nginx/nginx.conf`
+**2.3 Edit Nginx data:** <a id="nginx"></a>
+At the end services Grafana and InfluxDB will be exposed to internet. // If you don't want to expose InfluxDB read what to do [HERE](#only-grafana).
 
 Open Nginx configration:
-`nano configuration/nginx/nginx.conf`
+`nano nginx.conf`
 
 Replace Grafana domain:
-Remove `grafana.domain.local` and write in your own domain.
+Remove `grafana.domain.local` and write in your own Grafana domain.
 
 ```
 ...
@@ -49,7 +88,7 @@ server {
 ```
 
 Replace InfluxDB domain:
-Remove `influxdb.domain.local` and write in your own domain.
+Remove `influxdb.domain.local` and write in your own InfluxDB domain.
 
 ```
 ...
@@ -59,22 +98,20 @@ server {
 ...
 ```
 
-**2.4 Edit docker data:**
-Duplucate docker-cpompose file:
-`cp docker-compose.sample.yaml docker-compose.yaml`
+**2.4 Edit docker data:** <a id="docker"></a>
 
 Edit docker-compose file:
 `nano docker-compose.yaml`
 
-Grafana ENV:
+Grafana ENV explained:
 
 - 'HOSTNAME' sets up hostname of Grafana container,
 - 'GRAFANA_PUBLIC_URL' you tell your Grafana on what public url it will be exposed,
-- 'GRAFANA\*SMTP\*ENABLED' if you want to send emails set this to true. Else you can set this to false and also leave other `SMTP` ENV blank,
+- 'GRAFANA_SMTP_ENABLED' if you want to send emails set this to true. Else you can set this to false and also leave other `SMTP` ENV blank,
 - 'GRAFANA_SMTP_ADDRESS' hostname:port of your mailserver,
 - 'GRAFANA_SMTP_USER' username of email with which you will log in,
 - 'GRAFANA_SMTP_PASSWORD' password of 'GRAFANA_SMTP_USER' email,
-- 'GRAFANA_SMTP_SKIP_VERIFY' set this to true if you want to skip ssl/tls/starttls verification,
+- 'GRAFANA_SMTP_SKIP_VERIFY' set this to true if you want to skip ssl/tls verification,
 - 'GRAFANA_SMTP_FROM_ADDRESS' email address which email recipient see,
 - 'GRAFANA_SMTP_FROM_NAME' name which email recipient see,
 - 'GRAFANA_EMAIL_ON_SIGN_UP' if you want to send welcome email when user signup to your grafana set this to true.
@@ -100,44 +137,24 @@ services:
 ...
 ```
 
-Telegraf configuratio we leave for later...
+Telegraf configuration we leave for later...
 
-**2.5 Run script:**
+**2.5 Run script:** <a id="script"></a>
 Run:
 `sudo bash deploy.sh`
 
-If the last thing you see is when docker-compose is creating container and the successfully finished is everything OK!
+Now you can create SSL for your exposed domains if you want. (Certbot)
 
-Now you can create SSL for your exposed domains. (Certbot)
-
-**2.6 Set up InfluxDB:**
-Now reach your eposed domain of InfluxDB and you should be presented with welcome screen.
+**2.6 Set up InfluxDB:** <a id="inlux"></a>
+Now reach your exposed domain of InfluxDB and you should be presented with welcome screen.
 Click 'Get started'.
-![Alt text](/images/influx1.png)
 
-Fill up all the data and don't forget it.
+1. Fill up all the data and don't forget it. For bucket name st 'telegraf_data'.
+2. On left sidebar click on 'Data' section.
+3. Click on 'API Tokens on top menu.'
+4. Genera two API Tokens. Create read only one for Grafana and write only for Telegraf. For both is scope just bucket we have created before. Dont
 
-![Alt text](/images/influx2.png)
-
-On left side click on 'Data' section.
-
-![Alt text](/images/influx3.png)
-
-Then click on 'Telegraf'.
-
-![Alt text](/images/influx4.png)
-
-Create Configuration.
-
-![Alt text](/images/influx5.png)
-
-Choose System and Docker.
-
-![Alt text](/images/influx6.png)
-
-Then choose again Docker and paste this `/var/run/docker.sock` as socket.
-After this at the end you should be presented with token. Save it.
-
+**2.7 Set up Telegraf:** <a id="telegraf"></a>
 Open terminal and run `sudo cat /etc/group | grup docker` and keep in mind the group number.
 
 - 'user: telegraf:998' replace the 998 with number you got.
@@ -170,28 +187,24 @@ Open terminal and run `sudo cat /etc/group | grup docker` and keep in mind the g
 ...
 ```
 
-Now if you do `docker-compose up -d` and open InflxDB then see buckets and telegraf bucket you should see data comming. Or open logs for any errors.
+Now run `docker-compose up -d` to save changes in docker-compose.yaml file. Open InfluxDB, Explore section and select bucket you have created at registration. Now you can play in query builder and you should be also able to filter data by 'host' and there in should also be the hostname of you Telegraf instance.
 
-Open again InfluxDB. Now we need to create token for Grafana.
-Go back to data and then to API Tokens not to Telegraf.
-Create new Read/Write API Token.
-You can also scope it to only one bucket and only reading not writting.
-Save it.
-
-**2.7 Set up Grafana:**
-
+**2.8 Set up Grafana:** <a id="grafana"></a>
 Open Grafana.
 **Deault login is u: admin p: admin**
 On left menu find settings and then Data sources.
 Add new Data source InfluxDB.
-Query language should be Flux.
+Query language should be Flux. [More about QL Flux](https://docs.influxdata.com/flux/)
+
+Set these variables:
 
 - URL http://influxdb:8086
 - Uncheck basic auth
-- Organization
-- Token
-- Default bucket
+- Fill in Organization
+- Fill in Token
 
 When you click Save & Test it should show success.
-This is it. Now you can build views in grafana.
-Dont forget to read Grafana & InfluxDB Flux ql & Telegraf
+This is it. Now you can build dashboards in Grafana.
+Dont forget to read Grafana & InfluxDB Flux QL & Telegraf documentation.
+
+**Thanks for staying till end. If there is any error, problem or room for imporovement please contact me on `tilen.komel10@gmail.com`. Best regards.**
