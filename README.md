@@ -1,21 +1,21 @@
 # Grafana, Telegraf and InfluxDB 2.xx System monitoring
 
-1. [Description, Logic and Use cases](#desc)
-   [1.2 Why was this created?](#why)
-   [1.3 Brief set up process](#brief)
-   [1.4 Logic behind](#logic)
-   [1.5 Use cases](#cases)
-   [1.5.1 Expose Grafana and InfluxDB on Internet](#e-all)
-   [1.5.2 Expose only Grafana on Internet](#only-grafana)
-2. [Installation](#install)
-   [2.1 Clone repository](#clone)
-   [2.2 Change directory](#dir)
-   [2.3 Edit Nginx data](#nginx)
-   [2.4 Edit docker data](#docker)
-   [2.5 Run script?](#script)
-   [2.6 Set up InfluxDB](#influx)
-   [2.7 Set up Telegraf](#telegraf)
-   [2.8 Set up Grafana](#grafana)
+1. [Description, Logic and Use cases](#desc)</br>
+   [1.2 Why was this created?](#why)</br>
+   [1.3 Brief set up process](#brief)</br>
+   [1.4 Logic behind](#logic)</br>
+   [1.5 Use cases](#cases)</br>
+   [1.5.1 Expose Grafana and InfluxDB on Internet](#e-all)</br>
+   [1.5.2 Expose only Grafana on Internet](#only-grafana)</br>
+2. [Installation](#install)</br>
+   [2.1 Clone repository](#clone)</br>
+   [2.2 Change directory](#dir)</br>
+   [2.3 Edit Nginx data](#nginx)</br>
+   [2.4 Edit docker data](#docker)</br>
+   [2.5 Run script?](#script)</br>
+   [2.6 Set up InfluxDB](#influx)</br>
+   [2.7 Set up Telegraf](#telegraf)</br>
+   [2.8 Set up Grafana](#grafana)</br>
 
 ## 1. Description, Logic and Use cases <a id="desc"></a>
 
