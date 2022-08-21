@@ -45,15 +45,23 @@ if [ $? -ne 0 ]; then
 fi
 
 # Get Telegraf configuration file
-cp configuration/telegraf/telegraf.conf /appdata/telegraf/telegraf.conf && echo "Configuration file for Grafana downloaded successfully!"
+cp configuration/telegraf/telegraf.conf /appdata/telegraf/telegraf.conf && echo "Configuration file for Telegraf downloaded successfully!"
 
 if [ $? -ne 0 ]; then
     echo "Exitting because of error!"
     exit 1
 fi
 
+
 # Get Grafana configuration file
-cp configuration/grafana/grafana.ini /appdata/grafana/etc-grafana/grafana.ini && echo "Configuration file for Telegraf downloaded successfully!"
+cp configuration/grafana/grafana.ini /appdata/grafana/etc-grafana/grafana.ini && echo "Configuration file for Grafana downloaded successfully!"
+
+if [ $? -ne 0 ]; then
+    echo "Exitting because of error!"
+    exit 1
+fi
+
+cp -r configuration/grafana/provisioning /appdata/grafana/ && echo "Provisioning configuration file for Grafana downloaded successfully!"
 
 if [ $? -ne 0 ]; then
     echo "Exitting because of error!"

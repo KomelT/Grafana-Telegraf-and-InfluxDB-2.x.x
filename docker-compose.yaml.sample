@@ -11,6 +11,9 @@ services:
     environment:
       - HOSTNAME=
       - GRAFANA_PUBLIC_URL=https://grafana.domain.com
+      - GRAFANA_IDB_ORG=
+      - GRAFANA_IDB_BUCKET=
+      - GRAFANA_IDB_TOKEN=
       - GRAFANA_SMTP_ENABLED=true
       - GRAFANA_SMTP_ADDRESS=mail.domain.local:587
       - GRAFANA_SMTP_USER=
@@ -22,6 +25,7 @@ services:
     volumes:
       - /appdata/grafana/etc-grafana:/etc/grafana
       - /appdata/grafana/var-lib-grafana:/var/lib/grafana
+      - /appdata/grafana/provisioning:/etc/grafana/provisioning
     restart: always
   influxdb:
     image: influxdb:latest
