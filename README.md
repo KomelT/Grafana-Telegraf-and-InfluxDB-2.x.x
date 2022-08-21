@@ -160,7 +160,7 @@ Open terminal and run `sudo cat /etc/group | grup docker` and keep in mind the g
 - 'user: telegraf:998' replace the 998 with number you got.
 - 'TELEGRAF_HOSTNAME' In Grafana you will group by data by hostname so make it logical. Aka. from which machine is data comming,
 - 'TELEGRAF_IDB_TOKEN' Paste the token which you have been given in InfluxDB,
-- 'TELEGRAF_IDB_ORGANIZATION' Type in organization which you created at the registration,
+- 'TELEGRAF_IDB_ORG' Type in organization which you created at the registration,
 - 'TELEGRAF_IDB_BUCKET' Type in bucket name which you created at the registration.
 
 ```
@@ -182,7 +182,7 @@ Open terminal and run `sudo cat /etc/group | grup docker` and keep in mind the g
       - TELEGRAF_HOSTNAME=
       - TELEGRAF_IDB_URL=influxdb:8086
       - TELEGRAF_IDB_TOKEN=
-      - TELEGRAF_IDB_ORGANIZATION=
+      - TELEGRAF_IDB_ORG=
       - TELEGRAF_IDB_BUCKET=
 ...
 ```

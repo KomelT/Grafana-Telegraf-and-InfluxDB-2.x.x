@@ -28,6 +28,12 @@ services:
     container_name: GTF-monitoring_influxdb
     ports:
       - 8086:8086
+    environment:
+      - DOCKER_INFLUXDB_INIT_USERNAME=
+      - DOCKER_INFLUXDB_INIT_PASSWORD=
+      - DOCKER_INFLUXDB_INIT_ORG=
+      - DOCKER_INFLUXDB_INIT_BUCKET=
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=
     volumes:
       - influxdb_data1:/etc/influxdb2
       - influxdb_data2:/var/lib/influxdb2
@@ -46,13 +52,13 @@ services:
       - HOST_SYS=/rootfs/sys
       - HOST_ETC=/rootfs/etc
       - HOST_MOUNT_PREFIX=/rootfs
-      - TELEGRAF_GET_INTERVAL=10s
+      - TELEGRAF_GET_INTERVAL=5s
       - TELEGRAF_SEND_INTERVAL=10s
       - TELEGRAF_HOSTNAME=
       - TELEGRAF_IDB_URL=http://influxdb:8086
-      - TELEGRAF_IDB_TOKEN=
-      - TELEGRAF_IDB_ORGANIZATION=
+      - TELEGRAF_IDB_ORG=
       - TELEGRAF_IDB_BUCKET=
+      - TELEGRAF_IDB_TOKEN=
     volumes:
       - /appdata/telegraf/:/etc/telegraf/
       - /var/run/utmp:/var/run/utmp:ro
