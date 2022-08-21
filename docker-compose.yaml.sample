@@ -5,6 +5,7 @@ volumes:
 services:
   grafana:
     image: grafana/grafana:latest
+    container_name: GTF-monitoring_grafana
     ports:
       - 3000:3000
     environment:
@@ -24,6 +25,7 @@ services:
     restart: always
   influxdb:
     image: influxdb:latest
+    container_name: GTF-monitoring_influxdb
     ports:
       - 8086:8086
     volumes:
@@ -33,6 +35,7 @@ services:
     restart: always
   telegraf:
     image: telegraf:latest
+    container_name: GTF-monitoring_telegraf
     ports:
       - 8125:8125
       - 8092:8092/udp
